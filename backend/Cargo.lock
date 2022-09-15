@@ -3,12 +3,12 @@
 version = 3
 
 [[package]]
-name = "fundamentals"
-version = "0.1.0"
-
-[[package]]
-name = "game"
+name = "backend"
 version = "0.1.0"
 dependencies = [
  "fundamentals",
 ]
+
+[[package]]
+name = "fundamentals"
+version = "0.1.0"
