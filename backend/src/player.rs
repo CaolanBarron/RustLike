@@ -1,17 +1,17 @@
 extern crate fundamentals;
 
-use crate::entity::{Entity, Movement};
+use crate::entity::{Entity, Movement, Avatar};
 use fundamentals::position as pos;
 
 // Name: input from the user before the character is created
 // Health: A value that starts as a default but changes often
 // Position: A custom coordinate type that will change constantly
 #[derive(Debug)]
-struct Player {
+pub struct Player {
     name: String,
     health: usize,
     position: pos::Position,
-    avatar: char,
+    avatar: Avatar,
 }
 
 impl Player {
@@ -20,15 +20,15 @@ impl Player {
             name,
             health,
             position: pos::Position::new(position.0, position.1),
-            avatar: 'P',
+            avatar: Avatar::P,
         }
     }
 }
 
-impl Entity for Player {
+impl Entity for Player{
     //Getters
-    fn avatar(&self) -> char {
-        self.avatar
+    fn avatar(&self) ->  String {
+        self.avatar.to_string()
     }
     fn position(&self) -> &pos::Position {
         &self.position

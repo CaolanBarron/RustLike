@@ -1,18 +1,19 @@
-use crate::entity::{Entity, Movement};
+use crate::entity::{Entity, Movement, Avatar};
 use fundamentals::position::{self as pos, Position};
+
 
 // Name: name of the entity. Randomly generated
 // Health: Value that changes often 
 // Attach: used to determine probability out of 10
 // Damage: the amount of damage dealt if the attack succeeds
 #[derive(Debug)]
-struct Enemy {
+pub struct Enemy {
     name: String,
     health: usize,
     attack: usize,
     damage: usize,
     position: pos::Position,
-    avatar: char,
+    avatar: Avatar,
 }
 
 impl Enemy {
@@ -29,15 +30,15 @@ impl Enemy {
             attack,
             damage,
             position: Position::new(position.0, position.1),
-            avatar: 'E',
+            avatar: Avatar::E,
         }
     }
 }
 
 impl Entity for Enemy {
     // Getters
-    fn avatar(&self) -> char {
-        self.avatar
+    fn avatar(&self) -> String {
+        self.avatar.to_string()
     }
     fn position(&self) -> &pos::Position {
         &self.position
