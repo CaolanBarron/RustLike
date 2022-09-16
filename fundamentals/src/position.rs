@@ -1,5 +1,6 @@
 use std::{ops, fmt};
 
+#[derive(Debug)]
 pub struct Position {
     pub x: usize,
     pub y: usize,
@@ -8,6 +9,10 @@ pub struct Position {
 impl Position {
     pub fn new(x: usize, y: usize) -> Position {
         Position { x , y }
+    }
+
+    pub fn position(&self) ->(usize, usize) {
+        (self.x, self.y)
     }
 }
 
@@ -32,13 +37,6 @@ impl ops::Sub for Position {
         }
     }
 }
-
-impl fmt::Display for Position {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "x = {}, y = {}", self.x, self.y)
-    }
-}
-
 
 #[cfg(test)]
 mod position_tests {
@@ -67,6 +65,6 @@ mod position_tests {
     #[test]
     fn display_position() {
         let displ_pos = Position { x:7, y:3}; 
-        println!("Displays as: {}",displ_pos);
+        println!("Displays as: {:?}",displ_pos);
     }
 } 
