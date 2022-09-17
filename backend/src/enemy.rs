@@ -1,4 +1,4 @@
-use crate::entity::{Entity, Movement, Avatar};
+use crate::entity::{Entity, Movement};
 use fundamentals::position::{self as pos, Position};
 
 
@@ -13,7 +13,7 @@ pub struct Enemy {
     attack: usize,
     damage: usize,
     position: pos::Position,
-    avatar: Avatar,
+    avatar: char,
 }
 
 impl Enemy {
@@ -30,7 +30,7 @@ impl Enemy {
             attack,
             damage,
             position: Position::new(position.0, position.1),
-            avatar: Avatar::E,
+            avatar: '\u{20BE}',
         }
     }
 }

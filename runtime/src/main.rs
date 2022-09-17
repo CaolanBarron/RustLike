@@ -12,11 +12,11 @@ struct RuntimeData {
 }
 
 fn gameplay_loop(mut rd: RuntimeData) {
-    let mut map = Map{ writer: stdout(), size: (10,10) };
+    let mut map = Map::new((10,10), stdout());
     map.display_base_map().expect("Could not display map");
 
     loop {
-        get_input(&mut rd.player);
+        get_input(&mut rd.player);    
         map.refresh_player(&rd.player);
         map.refresh(&rd.entities);
     }
@@ -24,22 +24,18 @@ fn gameplay_loop(mut rd: RuntimeData) {
 
 fn get_input(player: &mut Player) {
     // Keep looping until user input arrives and then run the corresponding function
-    loop {
-        let event = read().unwrap();
+    let event = read().unwrap();
 
+    if let Event::Key(KeyEvent{ code, modifiers: _, kind: _, state: _ }) = event {
 
-        if let Event::Key(KeyEvent{ code, modifiers: _, kind: _, state: _ }) = event {
-
-            match code {
-                KeyCode::Left => player.move_left(),
-                KeyCode::Right => player.move_right(), 
-                KeyCode::Up => player.move_up(),
-                KeyCode::Down => player.move_down(),
-                KeyCode::Esc => panic!("Escaping"),
-                _ => (),
-            }
+        match code {
+            KeyCode::Left => player.move_left(),
+            KeyCode::Right => player.move_right(), 
+            KeyCode::Up => player.move_up(),
+            KeyCode::Down => player.move_down(),
+            KeyCode::Esc => panic!("Escaping"),
+            _ => (),
         }
-        
     }
 }
 
@@ -60,7 +56,7 @@ mod game_data_tests {
 
     fn test_data() -> RuntimeData {
         RuntimeData { 
-            player: Player::new("player test".to_string(), 10, (5,5)), 
+            player: Player::new("player test".to_string(), (5,5)), 
             entities: (vec![Box::new(
                 Enemy::new("test enemy".to_string(), 10, 4, 2, (4,4))
             )]) 
@@ -68,10 +64,7 @@ mod game_data_tests {
     }
 
     fn test_map() -> Map {
-        Map {
-            size: (10, 10),
-            writer: stdout(),
-        }
+        Map::new((10,10), stdout())
     }
 
     #[test]

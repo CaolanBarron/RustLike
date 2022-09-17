@@ -1,6 +1,6 @@
 extern crate fundamentals;
 
-use crate::entity::{Entity, Movement, Avatar};
+use crate::entity::{Entity, Movement};
 use fundamentals::position as pos;
 
 // Name: input from the user before the character is created
@@ -11,7 +11,7 @@ pub struct Player {
     name: String,
     health: usize,
     position: pos::Position,
-    avatar: Avatar,
+    avatar: char,
 }
 
 impl Player {
@@ -20,7 +20,7 @@ impl Player {
             name,
             health: 10,
             position: pos::Position::new(position.0, position.1),
-            avatar: Avatar::P,
+            avatar: '\u{263A}', 
         }
     }
 }
@@ -59,7 +59,7 @@ mod player_tests {
     use super::*;
     #[test]
     fn create_player() {
-        let player = Player::new(String::from("testName"), 10, (5, 5));
+        let player = Player::new(String::from("testName"), (5, 5));
 
         println!("{:?}", player);
 
@@ -75,7 +75,7 @@ mod player_move_tests {
     use super::*;
 
     fn base_player() -> Player {
-        Player::new("TestPlayer".to_string(), 10, (5, 5))
+        Player::new("TestPlayer".to_string(), (5, 5))
     }
     #[test]
     fn player_move_up_test() {

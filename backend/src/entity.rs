@@ -1,5 +1,4 @@
 use fundamentals::position::Position;
-use strum_macros::{EnumString, Display};
 
 /*
 An Entity is any non static character that will be displayed on the screen.
@@ -20,10 +19,4 @@ pub trait Movement {
     fn move_down(&mut self);
     fn move_left(&mut self);
     fn move_right(&mut self);
-}
-
-#[derive(Display,Debug)]
-pub enum Avatar {
-    P,
-    E,
 }
