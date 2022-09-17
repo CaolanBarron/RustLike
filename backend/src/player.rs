@@ -15,10 +15,10 @@ pub struct Player {
 }
 
 impl Player {
-    pub fn new(name: String, health: usize, position: (usize, usize)) -> Player {
+    pub fn new(name: String, position: (usize, usize)) -> Player {
         Player {
             name,
-            health,
+            health: 10,
             position: pos::Position::new(position.0, position.1),
             avatar: Avatar::P,
         }
