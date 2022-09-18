@@ -6,7 +6,7 @@ The avatar will be the physical representation that is printed to the terminal
 The position is the X and Y coordinates of the entity on the terminal.
 */
 pub trait Entity {
-    fn avatar(&self) -> String;
+    fn avatar(&self) -> char;
     fn position(&self) -> &Position;
 }
 

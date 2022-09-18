@@ -20,15 +20,15 @@ impl Player {
             name,
             health: 10,
             position: pos::Position::new(position.0, position.1),
-            avatar: '\u{263A}', 
+            avatar: '\u{263A}',
         }
     }
 }
 
-impl Entity for Player{
+impl Entity for Player {
     //Getters
-    fn avatar(&self) ->  String {
-        self.avatar.to_string()
+    fn avatar(&self) -> char {
+        self.avatar
     }
     fn position(&self) -> &pos::Position {
         &self.position
@@ -52,7 +52,6 @@ impl Movement for Player {
         self.position = pos::Position::new(self.position.x + 1, self.position.y);
     }
 }
-
 
 #[cfg(test)]
 mod player_tests {

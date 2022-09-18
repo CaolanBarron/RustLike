@@ -1,9 +1,8 @@
 use crate::entity::{Entity, Movement};
 use fundamentals::position::{self as pos, Position};
 
-
 // Name: name of the entity. Randomly generated
-// Health: Value that changes often 
+// Health: Value that changes often
 // Attach: used to determine probability out of 10
 // Damage: the amount of damage dealt if the attack succeeds
 #[derive(Debug)]
@@ -37,8 +36,8 @@ impl Enemy {
 
 impl Entity for Enemy {
     // Getters
-    fn avatar(&self) -> String {
-        self.avatar.to_string()
+    fn avatar(&self) -> char {
+        self.avatar
     }
     fn position(&self) -> &pos::Position {
         &self.position

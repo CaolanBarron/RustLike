@@ -167,6 +167,7 @@ dependencies = [
  "backend",
  "crossterm",
  "frontend",
+ "fundamentals",
 ]
 
 [[package]]

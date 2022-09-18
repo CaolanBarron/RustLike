@@ -9,3 +9,4 @@ edition = "2021"
 backend = {path="../backend"}
 crossterm = "0.25.0"
 frontend = {path="../frontend"}
+fundamentals = {path="../fundamentals"}

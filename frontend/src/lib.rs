@@ -1,5 +1,2 @@
-
-
-pub mod map;
 mod Map;
-
+pub mod map;
