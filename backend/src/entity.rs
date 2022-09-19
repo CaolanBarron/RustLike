@@ -8,6 +8,7 @@ The position is the X and Y coordinates of the entity on the terminal.
 pub trait Entity {
     fn avatar(&self) -> char;
     fn position(&self) -> &Position;
+    fn previous_position(&self) -> &Position;
 }
 
 /*

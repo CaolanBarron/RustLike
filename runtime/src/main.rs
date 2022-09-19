@@ -1,34 +1,34 @@
-use backend::{
-    entity::Movement,
-    player::Player,
-};
-use runtime_data::RuntimeData;
+use backend::{entity::{Movement, Entity}, player::Player};
 use core::panic;
-use crossterm::{
-    event::{read, Event, KeyCode, KeyEvent},
-};
-use frontend::map::{Map};
+use crossterm::event::{read, Event, KeyCode, KeyEvent};
+use frontend::map::Map;
 use fundamentals::position::Position;
-use std::{io::stdout};
-
+use runtime_data::RuntimeData;
+use std::io::stdout;
 mod runtime_data;
 
-fn gameplay_loop(mut rd: self::runtime_data::RuntimeData) {
-    let mut map = Map::new((10, 10), stdout());
+fn main() {
+    let mut rd = RuntimeData::new(Player::new("Stand in player".to_string(), (5, 5)));
+    let map = Map::new((100, 100), stdout());
     rd.generate_level(
         &map,
         Position::new(0, 0),
         Position::new(map.size.0.into(), map.size.1.into()),
     );
-    map.display_base_level(rd.level).expect("Could not display level");
+    gameplay_loop(map, rd);
+}
+
+fn gameplay_loop(mut map: Map, mut rd: RuntimeData) {
+    map.display_base_level(&rd.level)
+        .expect("Could not display level");
     loop {
-        get_input(&mut rd.player);
-        map.refresh_player(&rd.player);
+        get_input(&mut rd, &map);
         map.refresh(&rd.entities);
+        map.refresh_player(&rd.player, *rd.level.get(rd.player.previous_position()).unwrap());
     }
 }
 
-fn get_input(player: &mut Player) {
+fn get_input(rd: &mut RuntimeData, map: &Map) {
     // Keep looping until user input arrives and then run the corresponding function
     let event = read().unwrap();
 
@@ -40,19 +40,21 @@ fn get_input(player: &mut Player) {
     }) = event
     {
         match code {
-            KeyCode::Left => player.move_left(),
-            KeyCode::Right => player.move_right(),
-            KeyCode::Up => player.move_up(),
-            KeyCode::Down => player.move_down(),
+            KeyCode::Left => rd.player.move_left(),
+            KeyCode::Right => rd.player.move_right(),
+            KeyCode::Up => rd.player.move_up(),
+            KeyCode::Down => rd.player.move_down(),
             KeyCode::Esc => panic!("Escaping"),
             _ => (),
         }
     }
 }
 
-fn main() {
-    let rd = RuntimeData::new(Player::new("Stand in player".to_string(), (5, 5)));
-    gameplay_loop(rd);
+fn detect_collision(space: char) -> bool {
+    if space != '\u{2592}' {
+        return false;
+    }
+    true
 }
 
 #[cfg(test)]
@@ -78,7 +80,7 @@ mod game_data_tests {
             Position::new(map.size.0.into(), map.size.1.into()),
         );
 
-        map.display_base_level(data.level);
+        map.display_base_level(&data.level);
         // loop{}
     }
 }

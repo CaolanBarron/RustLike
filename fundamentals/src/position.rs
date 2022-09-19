@@ -1,6 +1,6 @@
 use std::{ops, fmt};
 
-#[derive(Debug)]
+#[derive(Debug, Hash, PartialEq, Eq, Default, Clone, Copy)]
 pub struct Position {
     pub x: usize,
     pub y: usize,

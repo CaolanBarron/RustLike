@@ -11,6 +11,7 @@ pub struct Player {
     name: String,
     health: usize,
     position: pos::Position,
+    previous_position: pos::Position,
     avatar: char,
 }
 
@@ -20,6 +21,7 @@ impl Player {
             name,
             health: 10,
             position: pos::Position::new(position.0, position.1),
+            previous_position: Default::default(),
             avatar: '\u{263A}',
         }
     }
@@ -33,22 +35,30 @@ impl Entity for Player {
     fn position(&self) -> &pos::Position {
         &self.position
     }
+
+    fn previous_position(&self) -> &pos::Position {
+        &self.previous_position
+    }
 }
 
 impl Movement for Player {
     fn move_up(&mut self) {
+        self.previous_position = self.position;
         self.position = pos::Position::new(self.position.x, self.position.y - 1);
     }
 
     fn move_down(&mut self) {
+        self.previous_position = self.position;
         self.position = pos::Position::new(self.position.x, self.position.y + 1);
     }
 
     fn move_left(&mut self) {
+        self.previous_position = self.position;
         self.position = pos::Position::new(self.position.x - 1, self.position.y);
     }
 
     fn move_right(&mut self) {
+        self.previous_position = self.position;
         self.position = pos::Position::new(self.position.x + 1, self.position.y);
     }
 }

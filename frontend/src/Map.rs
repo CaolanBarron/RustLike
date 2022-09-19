@@ -7,9 +7,8 @@ use crossterm::{
     Result,
 };
 use fundamentals::position::Position;
-use std::{ascii::AsciiExt, collections::HashMap, io::Stdout, vec};
+use std::{collections::HashMap, io::Stdout};
 
-enum BuildingBlocks {}
 pub struct Map {
     pub size: (u16, u16),
     pub writer: Stdout,
@@ -34,14 +33,14 @@ impl Map {
     }
 
     //
-    pub fn display_base_level(&mut self, level: Vec<(char, Position)>) -> Result<()> {
+    pub fn display_base_level(&mut self, level: &HashMap<Position, char>) -> Result<()> {
         execute!(self.writer, Clear(ClearType::All), EnterAlternateScreen,)?;
 
         level.iter().for_each(|input| {
             self.edit_map(
-                input.1.x.try_into().unwrap(),
-                input.1.y.try_into().unwrap(),
-                input.0,
+                input.0.x.try_into().unwrap(),
+                input.0.y.try_into().unwrap(),
+                *input.1,
             )
             .expect("Error while displaying map");
         });
@@ -58,18 +57,25 @@ impl Map {
     }
 
     pub fn refresh(&mut self, entities: &Vec<Box<dyn Entity>>) {
-        for e in entities.iter() {
+        entities.iter().for_each(|input| {
             self.edit_map(
-                e.position().x.try_into().unwrap(),
-                e.position().y.try_into().unwrap(),
-                e.avatar(),
+                input.position().x.try_into().unwrap(),
+                input.position().y.try_into().unwrap(),
+                input.avatar(),
             )
-            .expect("Refresh failed");
-        }
+            .expect("Error while displaying enemies")
+        });
     }
 
-    pub fn refresh_player(&mut self, player: &backend::player::Player) {
+    pub fn refresh_player(&mut self, player: &backend::player::Player, previous_char: char) {
         self.edit_map(
+            player.previous_position().x.try_into().unwrap(),
+            player.previous_position().y.try_into().unwrap(),
+            previous_char,
+        )
+        .expect("Refresh failed on player");
+       
+       self.edit_map(
             player.position().x.try_into().unwrap(),
             player.position().y.try_into().unwrap(),
             player.avatar(),
