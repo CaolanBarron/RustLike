@@ -1,30 +1,32 @@
-use backend::{entity::{Movement, Entity}, player::Player};
+use backend::{entity::{Entity, Character}, player::Player};
 use core::panic;
 use crossterm::event::{read, Event, KeyCode, KeyEvent};
-use frontend::map::Map;
-use fundamentals::position::Position;
+use frontend::Map::Map;
+use fundamentals::{position::Position, pos};
 use runtime_data::RuntimeData;
 use std::io::stdout;
 mod runtime_data;
 
 fn main() {
-    let mut rd = RuntimeData::new(Player::new("Stand in player".to_string(), (5, 5)));
-    let map = Map::new((100, 100), stdout());
+    let mut rd = RuntimeData::new(Player::new("Stand in player".to_string(), 5, 5));
+    let map = Map::new((10, 10), stdout());
     rd.generate_level(
         &map,
         Position::new(0, 0),
         Position::new(map.size.0.into(), map.size.1.into()),
     );
+
     gameplay_loop(map, rd);
 }
 
 fn gameplay_loop(mut map: Map, mut rd: RuntimeData) {
     map.display_base_level(&rd.level)
         .expect("Could not display level");
+
     loop {
         get_input(&mut rd, &map);
-        map.refresh(&rd.entities);
-        map.refresh_player(&rd.player, *rd.level.get(rd.player.previous_position()).unwrap());
+        map.refresh_entities(&rd.entities);
+        map.refresh_player(&rd.player, *rd.level.get(&rd.player.previous_position()).unwrap())
     }
 }
 
@@ -55,32 +57,4 @@ fn detect_collision(space: char) -> bool {
         return false;
     }
     true
-}
-
-#[cfg(test)]
-mod game_data_tests {
-    use super::*;
-
-    fn test_data() -> RuntimeData {
-        RuntimeData::new(Player::new("player test".to_string(), (5, 5)))
-    }
-
-    fn test_map() -> Map {
-        Map::new((10, 10), stdout())
-    }
-
-    #[test]
-    fn level_display_test() {
-        let mut map = test_map();
-        let mut data = test_data();
-
-        data.generate_level(
-            &map,
-            Position::new(0, 0),
-            Position::new(map.size.0.into(), map.size.1.into()),
-        );
-
-        map.display_base_level(&data.level);
-        // loop{}
-    }
 }

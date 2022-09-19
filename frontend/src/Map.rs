@@ -1,4 +1,4 @@
-use backend::entity::Entity;
+use backend::entity::{Entity, Mapable};
 use crossterm::{
     cursor::{Hide, MoveTo},
     execute,
@@ -10,13 +10,13 @@ use fundamentals::position::Position;
 use std::{collections::HashMap, io::Stdout};
 
 pub struct Map {
-    pub size: (u16, u16),
+    pub size: (isize, isize),
     pub writer: Stdout,
     pub blocks: HashMap<String, char>,
 }
 
 impl Map {
-    pub fn new(size: (u16, u16), writer: Stdout) -> Self {
+    pub fn new(size: (isize, isize), writer: Stdout) -> Self {
         Self {
             size,
             writer,
@@ -51,23 +51,23 @@ impl Map {
         Ok(())
     }
 
-    fn edit_map(&mut self, x: u16, y: u16, input: char) -> Result<()> {
+    pub fn edit_map(&mut self, x: u16, y: u16, input: char) -> Result<()> {
         execute!(self.writer, MoveTo(x, y), Hide, Print(input))?;
         Ok(())
     }
 
-    pub fn refresh(&mut self, entities: &Vec<Box<dyn Entity>>) {
-        entities.iter().for_each(|input| {
+    pub fn refresh_entities(&mut self, entities: &Vec<Box<dyn Mapable>>) {
+        entities.iter().for_each(|entity| {
             self.edit_map(
-                input.position().x.try_into().unwrap(),
-                input.position().y.try_into().unwrap(),
-                input.avatar(),
-            )
-            .expect("Error while displaying enemies")
+                entity.position().x.try_into().unwrap(), 
+                entity.position().y.try_into().unwrap(), 
+                entity.avatar()).expect("Error while refreshinh entities");
         });
+
     }
 
     pub fn refresh_player(&mut self, player: &backend::player::Player, previous_char: char) {
+
         self.edit_map(
             player.previous_position().x.try_into().unwrap(),
             player.previous_position().y.try_into().unwrap(),
@@ -102,16 +102,5 @@ mod map_tests {
             "{}",
             m.blocks.get(&"bottom_right_wall".to_string()).unwrap()
         );
-    }
-}
-#[cfg(test)]
-mod display_tests {
-    use super::*;
-    use std::io::{stderr, stdout};
-
-    fn test_map() -> Map {
-        let p = backend::player::Player::new("TestPlayer1".to_string(), (3, 5));
-
-        Map::new((10, 10), stdout())
     }
 }

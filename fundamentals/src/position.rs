@@ -2,10 +2,10 @@ use std::{ops, fmt};
 
 #[derive(Debug, Hash, PartialEq, Eq, Default, Clone, Copy)]
 pub struct Position {
-    pub x: usize,
-    pub y: usize,
+    pub x: isize,
+    pub y: isize,
 }
-
+#[macro_export]
 macro_rules! pos{
     ($a:expr, $b:expr) => {
         Position {
@@ -16,11 +16,11 @@ macro_rules! pos{
 }
 
 impl Position {
-    pub fn new(x: usize, y: usize) -> Position {
+    pub fn new(x: isize, y: isize) -> Position {
         Position { x , y }
     }
 
-    pub fn position(&self) ->(usize, usize) {
+    pub fn position(&self) ->(isize, isize) {
         (self.x, self.y)
     }
 }

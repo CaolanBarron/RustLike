@@ -1,2 +1,1 @@
-mod Map;
-pub mod map;
+pub mod Map;

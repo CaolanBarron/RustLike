@@ -1,13 +1,13 @@
 use std::collections::HashMap;
 
-use backend::{entity::Entity, player::Player};
-use frontend::map::Map;
+use backend::{entity::{Entity, Mapable}, player::Player};
+use frontend::Map::Map;
 use fundamentals::position::Position;
 
 //  Data concerning what entities are active in the game
 pub(crate) struct RuntimeData {
     pub(crate) player: Player,
-    pub(crate) entities: Vec<Box<dyn Entity>>,
+    pub(crate) entities: Vec<Box<dyn Mapable>>,
     pub(crate) level: HashMap<Position, char>,
 }
 
@@ -21,7 +21,7 @@ impl RuntimeData {
     }
 
     pub(crate) fn generate_level(&mut self, map: &Map, start: Position, end: Position) {
-        let mut insert = |character: &str, x: usize, y: usize| {
+        let mut insert = |character: &str, x: isize, y: isize| {
             self.level.insert(
                 Position::new(x, y),
                 map.blocks.get(&character.to_string()).unwrap().clone(),

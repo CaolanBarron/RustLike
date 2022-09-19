@@ -1,113 +1,72 @@
 extern crate fundamentals;
+use fundamentals::{pos,position::Position};
+    
+    
+use crate::entity::{Entity, Character, Mapable};
 
-use crate::entity::{Entity, Movement};
-use fundamentals::position as pos;
 
-// Name: input from the user before the character is created
-// Health: A value that starts as a default but changes often
-// Position: A custom coordinate type that will change constantly
-#[derive(Debug)]
 pub struct Player {
-    name: String,
-    health: usize,
-    position: pos::Position,
-    previous_position: pos::Position,
-    avatar: char,
+    data: Entity
 }
 
 impl Player {
-    pub fn new(name: String, position: (usize, usize)) -> Player {
-        Player {
-            name,
-            health: 10,
-            position: pos::Position::new(position.0, position.1),
-            previous_position: Default::default(),
-            avatar: '\u{263A}',
+
+    pub fn new(name: String, x: isize, y: isize) -> Self {
+        Player { 
+            data: Entity {
+                name,
+                position: pos!(x, y),
+                previous_position: pos!(x,y),
+                avatar: '\u{263A}',
+            } 
         }
     }
+    pub fn position(&self) -> Position {
+       self.data.position.clone() 
+    }
+
+    pub fn previous_position(&self) -> Position {
+        self.data.previous_position.clone()
+    }
+
 }
 
-impl Entity for Player {
-    //Getters
+impl Mapable for Player {
     fn avatar(&self) -> char {
-        self.avatar
-    }
-    fn position(&self) -> &pos::Position {
-        &self.position
+        self.data.avatar.clone()
     }
 
-    fn previous_position(&self) -> &pos::Position {
-        &self.previous_position
+    fn position(&self) -> Position {
+        self.data.position.clone()
+    }
+
+    fn previous_position(&self) -> Position {
+        self.data.previous_position.clone()
     }
 }
 
-impl Movement for Player {
+impl Character for Player {
     fn move_up(&mut self) {
-        self.previous_position = self.position;
-        self.position = pos::Position::new(self.position.x, self.position.y - 1);
+        self.data.update_position();
+        self.data.move_position(pos!(0, -1));
     }
-
     fn move_down(&mut self) {
-        self.previous_position = self.position;
-        self.position = pos::Position::new(self.position.x, self.position.y + 1);
+        self.data.update_position();
+        self.data.move_position(pos!(0, 1));
     }
-
     fn move_left(&mut self) {
-        self.previous_position = self.position;
-        self.position = pos::Position::new(self.position.x - 1, self.position.y);
+        self.data.update_position();
+        self.data.move_position(pos!(-1, 0));
     }
-
     fn move_right(&mut self) {
-        self.previous_position = self.position;
-        self.position = pos::Position::new(self.position.x + 1, self.position.y);
+        self.data.update_position();
+        self.data.move_position(pos!(1, 0));
     }
-}
-
-#[cfg(test)]
-mod player_tests {
-    use super::*;
-    #[test]
-    fn create_player() {
-        let player = Player::new(String::from("testName"), (5, 5));
-
-        println!("{:?}", player);
-
-        assert_eq!(player.name, "testName");
-        assert_eq!(player.health, 10);
-        assert_eq!(player.position.x, 5);
-        assert_eq!(player.position.y, 5);
+    
+    fn walkable(ground: char) -> bool {
+        todo!()
     }
-}
-
-#[cfg(test)]
-mod player_move_tests {
-    use super::*;
-
-    fn base_player() -> Player {
-        Player::new("TestPlayer".to_string(), (5, 5))
-    }
-    #[test]
-    fn player_move_up_test() {
-        let mut p = base_player();
-        p.move_up();
-        assert_eq!(p.position.position(), (5, 4));
-    }
-    #[test]
-    fn player_move_down_test() {
-        let mut p = base_player();
-        p.move_down();
-        assert_eq!(p.position.position(), (5, 6));
-    }
-    #[test]
-    fn player_move_left_test() {
-        let mut p = base_player();
-        p.move_left();
-        assert_eq!(p.position.position(), (4, 5));
-    }
-    #[test]
-    fn player_move_right_test() {
-        let mut p = base_player();
-        p.move_right();
-        assert_eq!(p.position.position(), (6, 5));
+    fn look() -> Vec<Entity> {
+        todo!()
     }
 }
