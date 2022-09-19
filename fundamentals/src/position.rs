@@ -6,6 +6,15 @@ pub struct Position {
     pub y: usize,
 }
 
+macro_rules! pos{
+    ($a:expr, $b:expr) => {
+        Position {
+            x: $a,
+            y: $b,
+        }
+    }
+}
+
 impl Position {
     pub fn new(x: usize, y: usize) -> Position {
         Position { x , y }
@@ -66,5 +75,11 @@ mod position_tests {
     fn display_position() {
         let displ_pos = Position { x:7, y:3}; 
         println!("Displays as: {:?}",displ_pos);
+    }
+
+    #[test]
+    fn use_macro() {
+        let p = pos!(5,5);
+        assert_eq!(p, Position{x:5,y:5});
     }
 } 
