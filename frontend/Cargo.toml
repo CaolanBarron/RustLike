@@ -9,3 +9,4 @@ edition = "2021"
 crossterm = "0.25.0"
 fundamentals = {path = "../fundamentals"}
 backend = {path = "../backend"}
+indexmap = "1.9.1"

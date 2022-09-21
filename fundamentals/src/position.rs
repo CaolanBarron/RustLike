@@ -1,4 +1,4 @@
-use std::{ops, fmt};
+use std::{ops};
 
 #[derive(Debug, Hash, PartialEq, Eq, Default, Clone, Copy)]
 pub struct Position {

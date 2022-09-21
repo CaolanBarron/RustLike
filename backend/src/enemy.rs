@@ -1,13 +1,31 @@
+use std::array;
+
 use fundamentals::{pos, position::Position};
+use rand::seq::SliceRandom;
 
 use crate::entity::{Entity, Character, Mapable};
 
+#[derive(Debug)]
 pub struct Enemy {
-    data: Entity,
+    pub(crate) data: Entity,
 }
 
 impl Enemy {
 
+    pub fn random_enemy_name() -> (String, char) {
+        let name = [
+            "Harpy",
+            "Orc",
+            "Bandit",
+            "Zombie",
+            "Dinosaur",
+            "Skeleton",
+            "Wizard",
+        ];
+
+        let chosen_name = name.choose(&mut rand::thread_rng()).unwrap();
+        (chosen_name.to_string(), chosen_name.chars().next().unwrap())
+    }
 }
 
 impl Mapable for Enemy {
@@ -21,6 +39,10 @@ impl Mapable for Enemy {
 
     fn previous_position(&self) -> Position {
         self.data.previous_position.clone()
+    }
+
+    fn name(&self) -> &String {
+       &self.data.name 
     }
 }
 
@@ -45,12 +67,23 @@ impl Character for Enemy {
         self.data.move_position(pos!(0,-1));
     }
 
-    fn walkable(ground: char) -> bool {
-        todo!()
-    }
 
     fn look() -> Vec<Entity> {
         todo!()
+    }
+
+    fn walkable(ground: Option<&char>) -> bool {
+        match ground {
+            Some(ground) =>{ 
+                match ground {
+                    '\u{2591}' => true,
+                    '\u{2592}' => true,
+                    '\u{2593}' => true,
+                    _ => false,
+                }
+            }
+            None => false,
+        }
     }
 }
 

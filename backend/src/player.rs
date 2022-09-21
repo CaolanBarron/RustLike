@@ -43,6 +43,10 @@ impl Mapable for Player {
     fn previous_position(&self) -> Position {
         self.data.previous_position.clone()
     }
+
+    fn name(&self) -> &String {
+       &self.data.name 
+    }
 }
 
 impl Character for Player {
@@ -63,8 +67,18 @@ impl Character for Player {
         self.data.move_position(pos!(1, 0));
     }
     
-    fn walkable(ground: char) -> bool {
-        todo!()
+    fn walkable(_ground: Option<&char>) -> bool {
+        match _ground {
+            Some(ground) =>{ 
+                match ground {
+                    '\u{2591}' => true,
+                    '\u{2592}' => true,
+                    '\u{2593}' => true,
+                    _ => false,
+                }
+            }
+            None => false,
+        }
     }
     fn look() -> Vec<Entity> {
         todo!()

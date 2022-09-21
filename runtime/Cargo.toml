@@ -10,3 +10,5 @@ backend = {path="../backend"}
 crossterm = "0.25.0"
 frontend = {path="../frontend"}
 fundamentals = {path="../fundamentals"}
+indexmap = "1.9.1"
+rand = "0.8.5"

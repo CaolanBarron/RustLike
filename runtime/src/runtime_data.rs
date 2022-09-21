@@ -1,14 +1,16 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, ops::Index};
 
-use backend::{entity::{Entity, Mapable}, player::Player};
-use frontend::Map::Map;
-use fundamentals::position::Position;
+use backend::{entity::{Entity, Mapable, EntityBuilder, Character}, player::Player, enemy::Enemy};
+use frontend::map::Map;
+use fundamentals::{position::Position, pos};
+use indexmap::IndexMap;
+use rand::{Rng, seq::IteratorRandom};
 
 //  Data concerning what entities are active in the game
 pub(crate) struct RuntimeData {
     pub(crate) player: Player,
     pub(crate) entities: Vec<Box<dyn Mapable>>,
-    pub(crate) level: HashMap<Position, char>,
+    pub(crate) level: IndexMap<Position, char>,
 }
 
 impl RuntimeData {
@@ -16,11 +18,25 @@ impl RuntimeData {
         Self {
             player,
             entities: vec![],
-            level: HashMap::new(),
+            level: IndexMap::new()
+        }
+    }
+
+    pub fn add_enemy(&mut self) {
+        loop{
+            let pos = self.level.keys().choose(&mut rand::thread_rng());
+            if Enemy::walkable(self.level.get(pos.unwrap())) {
+                let eb = EntityBuilder::new();
+                self.entities.push(Box::new(eb.build_enemy(*pos.unwrap())));
+                break;
+            }
         }
     }
 
     pub(crate) fn generate_level(&mut self, map: &Map, start: Position, end: Position) {
+
+        let start = pos!(52,5);
+        let end = pos!(80,15);
         let mut insert = |character: &str, x: isize, y: isize| {
             self.level.insert(
                 Position::new(x, y),
@@ -60,4 +76,26 @@ impl RuntimeData {
             }
         }
     }
+}
+
+
+#[cfg(test)]
+mod runtime_data_tests {
+    use frontend::UI;
+
+    use super::*;
+
+    #[test]
+    fn add_enemy_test() {
+        let mut rd = RuntimeData::new( Player::new("namJose".to_string(), 55, 5) );
+
+        let ui = UI::build((2,2), 2);
+
+        rd.generate_level(ui.map(), pos!(50,4), pos!(100,50));
+
+        rd.add_enemy();
+
+        print!("FOund");
+        print!("{:?}", rd.entities.index(0).name());
+    } 
 }
