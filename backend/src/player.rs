@@ -2,11 +2,13 @@ extern crate fundamentals;
 use fundamentals::{pos,position::Position};
     
     
-use crate::entity::{Entity, Character, Mapable};
+use crate::{entity::{Entity, Character, Mapable}, item::Item};
 
 
 pub struct Player {
-    data: Entity
+    data: Entity,
+
+    inventory: Vec<Box<dyn Item>>,
 }
 
 impl Player {
@@ -18,7 +20,8 @@ impl Player {
                 position: pos!(x, y),
                 previous_position: pos!(x,y),
                 avatar: '\u{263A}',
-            } 
+            },
+            inventory: vec![],
         }
     }
     pub fn position(&self) -> Position {
@@ -27,6 +30,14 @@ impl Player {
 
     pub fn previous_position(&self) -> Position {
         self.data.previous_position.clone()
+    }
+
+    pub fn pick_up(item: Box<dyn Item>) {
+        todo!()
+    }
+
+    pub fn drop(item: Box<dyn Item>) -> Box<dyn Item> {
+        todo!()
     }
 
 }

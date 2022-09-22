@@ -4,3 +4,5 @@ pub mod entity;
 pub mod player;
 // Enemies will act according to a prewritten intelligence with a limited ability compared to the player
 pub mod enemy;
+
+pub mod item;

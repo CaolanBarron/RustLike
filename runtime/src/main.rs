@@ -47,27 +47,35 @@ fn get_input(rd: &mut RuntimeData) {
         match code {
             KeyCode::Left => {
                 let p = rd.player.position() + pos!(-1,0);
-                if Player::walkable(rd.level.get(&p)) {
+
+                if Player::walkable(rd.level.get(&p)) && 
+                !rd.entities.iter().any(|x| x.position() == p ) {
                     rd.player.move_left()
                 }
             }
             KeyCode::Right => {
                 let p = rd.player.position() + pos!(1,0);
-                if Player::walkable(rd.level.get(&p)) {
+
+                if Player::walkable(rd.level.get(&p)) && 
+                !rd.entities.iter().any(|x| x.position() == p ){
                     rd.player.move_right()
                 }
             }
 
             KeyCode::Up => {
                 let p = rd.player.position() + pos!(0,-1);
-                if Player::walkable(rd.level.get(&p)) {
+
+                if Player::walkable(rd.level.get(&p)) && 
+                !rd.entities.iter().any(|x| x.position() == p ) {
                     rd.player.move_up()
                 }
             }
 
             KeyCode::Down => {
                 let p = rd.player.position() + pos!(0,1);
-                if Player::walkable(rd.level.get(&p)) {
+                
+                if Player::walkable(rd.level.get(&p)) && 
+                !rd.entities.iter().any(|x| x.position() == p ){
                     rd.player.move_down()
                 }
             }

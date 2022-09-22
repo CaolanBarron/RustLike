@@ -19,11 +19,11 @@ impl Entity {
         self.name
     }
 
-    pub fn position(self) -> Position {
+    pub fn position(&self) -> Position {
         self.position.clone()
     }
 
-    pub fn previous_position(self) -> Position {
+    pub fn previous_position(&self) -> Position {
         self.previous_position.clone()
     }
 

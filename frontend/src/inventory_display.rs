@@ -1,5 +1,6 @@
 use std::io::stdout;
 
+use backend::item::Item;
 use crossterm::{execute, cursor::{MoveTo, Hide}, style::Print};
 use fundamentals::{pos, position::{Position}};
 
@@ -20,10 +21,15 @@ impl InventoryDisplay {
         }
     }
 
-    fn draw_inventory_info(&self,) {
+    fn draw_inventory_content(&self, items: &Vec<Box<dyn Item>>) {
         let x = self.start_position.x as u16;
-        let y = self.start_position.y as u16 + 1;
-        todo!();
+        let y = self.start_position.y as u16 + 3;
+        let end_x = self.end_position.x as u16;
+        
+        for (i ,item) in items.iter().enumerate() {
+            execute!(stdout(), MoveTo(x + 3, y + (3*i) as u16), Print(item.name()));
+            execute!(stdout(), MoveTo(end_x - 3, y + (3*i) as u16), Print(item.avatar()));
+        }
     }
 }
 
@@ -75,17 +81,15 @@ impl UiElement for InventoryDisplay {
                 }
             }
         }
-
         self.draw_inventory_title();
- 
     }
 }
 
 #[cfg(test)]
 mod inventory_display_tests {
+    use backend::{item::{Weapon, Armour, Potion}, entity::Entity};
     use crossterm::{terminal::{EnterAlternateScreen, ClearType, Clear, disable_raw_mode, enable_raw_mode}, event::{read, Event, KeyEvent, KeyCode}};
     use fundamentals::pos;
-
     use super::*;
     
     fn test_input() {
@@ -111,6 +115,48 @@ mod inventory_display_tests {
         enable_raw_mode();
         id.draw_frame(id.start_position, id.end_position);
         id.draw_inventory_title();
+
+        loop{
+            test_input();
+        }
+    }
+
+    #[test]
+    fn display_inventory_content() {
+        let id = InventoryDisplay::build(pos!(0,0), pos!(20,50));
+        execute!(stdout(),Clear(ClearType::All), EnterAlternateScreen);
+        enable_raw_mode();
+        id.draw_frame(id.start_position, id.end_position);
+        id.draw_inventory_title();
+
+        let items: Vec<Box<dyn Item>> = vec![
+            Box::new(Weapon { 
+                data: Entity { 
+                    name: "TEST 1".to_string(), 
+                    position: pos!(21,4), 
+                    previous_position: pos!(30,8), 
+                    avatar: 'W', 
+                }
+             }),
+             Box::new(Armour { 
+                data: Entity { 
+                    name: "TEST 2".to_string(), 
+                    position: pos!(21,4), 
+                    previous_position: pos!(30,8), 
+                    avatar: 'A', 
+                }
+             }),
+             Box::new(Potion { 
+                data: Entity { 
+                    name: "TEST 3".to_string(), 
+                    position: pos!(21,4), 
+                    previous_position: pos!(30,8), 
+                    avatar: 'P', 
+                }
+             }),
+        ];
+
+        id.draw_inventory_content(&items);
 
         loop{
             test_input();
