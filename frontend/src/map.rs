@@ -1,14 +1,13 @@
 use backend::entity::{Mapable};
 use crossterm::{
-    cursor::{Hide, MoveTo},
+    cursor::{Hide, MoveTo, Show},
     execute,
     style::Print,
-    terminal::{enable_raw_mode, Clear, ClearType, EnterAlternateScreen},
     Result,
 };
-use fundamentals::{pos, position::{Position}};
+use fundamentals::{position::{Position}};
 use indexmap::IndexMap;
-use std::{collections::HashMap, io::{Stdout, stdout}};
+use std::{collections::HashMap, io::{Stdout, stdout}, rc::Rc};
 use crate::UiElement;
 pub struct Map {
     pub start_position: Position,
@@ -104,7 +103,7 @@ impl Map {
 
     
 
-    pub fn refresh_entities(&self, entities: &Vec<Box<dyn Mapable>>, writer: &mut Stdout) {
+    pub fn refresh_entities(&self, entities: &Vec<Rc<dyn Mapable>>, writer: &mut Stdout) {
         entities.iter().for_each(|entity| {
             self.edit_ui(
                 entity.position().x.try_into().unwrap(), 
@@ -133,18 +132,24 @@ impl Map {
         )
         .expect("Refresh failed on player");
     }
+
+    pub fn target_character(&self, pos: &Position) {
+        execute!(stdout(), MoveTo(pos.x as u16, pos.y as u16), Show);
+    }
 }
 
 
 #[cfg(test)]
 mod map_tests {
+    use crossterm::terminal::{enable_raw_mode, Clear, ClearType, EnterAlternateScreen};
+    use fundamentals::pos;
     use super::*;
 
     #[test]
     fn display_map_frame() {
         let m = Map::build(pos!(0, 0), pos!(20, 20));
-        execute!(stdout(),Clear(ClearType::All), EnterAlternateScreen);
-        enable_raw_mode();
+        execute!(stdout(),Clear(ClearType::All), EnterAlternateScreen).expect("Weird");
+        enable_raw_mode().expect("Also Weird");
         m.draw_frame(m.start_position, m.end_position);
         loop{}
     }

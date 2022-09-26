@@ -60,21 +60,21 @@ impl UI {
             OptionsDisplay::build(pos!(0, size.1 + 1), pos!(size.0, size.1 + 2));
 */
         let id = 
-            InventoryDisplay::build(pos!(30 ,0), pos!(50, 50));
+            InventoryDisplay::build(pos!(30 ,0), pos!(50, 40));
 
         let m = 
-            Map::build(pos!(50,0), pos!(100,50));
+            Map::build(pos!(50,0), pos!(100,40));
 
         let db = 
-            DialogueBox::build(pos!(30, 50), pos!(80, 70));
+            DialogueBox::build(pos!(30, 40), pos!(80, 60));
         
         let cp = 
             CharacterPortrait::build(
-                pos!(80, 50), 
-                pos!( 100, 70));
+                pos!(80, 40), 
+                pos!( 100, 60));
 
         let od = 
-            OptionsDisplay::build(pos!(30, 70), pos!(100, 74));
+            OptionsDisplay::build(pos!(30, 60), pos!(100, 64));
 
 
         UI {

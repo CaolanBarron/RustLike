@@ -1,4 +1,4 @@
-use std::{collections::HashMap, ops::Index};
+use std::{collections::HashMap, ops::Index, rc::Rc};
 
 use backend::{entity::{Entity, Mapable, EntityBuilder, Character}, player::Player, enemy::Enemy};
 use frontend::map::Map;
@@ -9,8 +9,10 @@ use rand::{Rng, seq::IteratorRandom};
 //  Data concerning what entities are active in the game
 pub(crate) struct RuntimeData {
     pub(crate) player: Player,
-    pub(crate) entities: Vec<Box<dyn Mapable>>,
+    pub(crate) entities: Vec<Rc<dyn Mapable>>,
     pub(crate) level: IndexMap<Position, char>,
+    pub targeted: usize,
+    pub choice: u16,
 }
 
 impl RuntimeData {
@@ -18,16 +20,31 @@ impl RuntimeData {
         Self {
             player,
             entities: vec![],
-            level: IndexMap::new()
+            level: IndexMap::new(),
+            targeted: 0,
+            choice: 0,
         }
     }
 
     pub fn add_enemy(&mut self) {
         loop{
             let pos = self.level.keys().choose(&mut rand::thread_rng());
-            if Enemy::walkable(self.level.get(pos.unwrap())) {
+            if {
+                let _ground = self.level.get(pos.unwrap());
+                match _ground {
+                    Some(ground) =>{ 
+                        match ground {
+                            '\u{2591}' => true,
+                            '\u{2592}' => true,
+                            '\u{2593}' => true,
+                            _ => false,
+                        }
+                    }
+                    None => false,
+                }
+            } {
                 let eb = EntityBuilder::new();
-                self.entities.push(Box::new(eb.build_enemy(*pos.unwrap())));
+                self.entities.push(Rc::new(eb.build_enemy(*pos.unwrap())));
                 break;
             }
         }

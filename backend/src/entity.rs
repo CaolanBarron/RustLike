@@ -41,6 +41,7 @@ pub trait Mapable {
     fn position(&self) -> Position;
     fn previous_position(&self) -> Position;
     fn name(&self) -> &String;
+    fn dialogue(&self) -> Vec<String>;
 }
 
 pub trait Character {
@@ -49,7 +50,7 @@ pub trait Character {
     fn move_left(&mut self);
     fn move_right(&mut self);
 
-    fn walkable(ground: Option<&char>) -> bool {
+    fn walkable( ground: Option<&char>) -> bool {
         match ground {
             Some(ground) =>{ 
                 match ground {
@@ -62,7 +63,6 @@ pub trait Character {
             None => false,
         }
     }
-    fn look() -> Vec<Entity>;
 }
 
 #[derive(Default)]

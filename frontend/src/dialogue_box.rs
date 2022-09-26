@@ -1,3 +1,5 @@
+use std::{iter::Enumerate, io::stdout};
+
 use crossterm::{execute, cursor::{MoveTo, Hide}, style::Print};
 use fundamentals::position::Position;
 
@@ -7,6 +9,41 @@ pub struct DialogueBox {
     start_position: Position,
     end_position: Position,
 }
+
+impl DialogueBox {
+    pub fn draw_title(&self, title: &String ) {
+        let start_x = (self.start_position.x + 5) as u16;
+        let start_y = (self.start_position.y + 2) as u16;
+
+        execute!(stdout(), MoveTo(start_x, start_y), Print(title));
+
+        for i in 0..((self.end_position.x-2) - (self.start_position.x)) {
+            execute!(stdout(), MoveTo((self.start_position.x + 1) as u16 + i as u16, start_y + 2), Print('\u{2504}'));
+        }
+    }
+
+    pub fn draw_options(&self, lines: &Vec<String>, choice: &u16 ) {
+        let start_x = (self.start_position.x + 5) as u16;
+        let start_y = (self.start_position.y + 6) as u16;
+        for (i, line) in lines.iter().enumerate() {
+            execute!(stdout(), MoveTo(start_x, start_y +(2 * i as u16)), Print(line));
+        }
+
+        self.draw_pointer(&choice)
+    }
+
+    pub fn clear_box(&self) {
+        for i in self.start_position.y+1..self.end_position.y-1 {
+            execute!(stdout(), MoveTo((self.start_position.x + 2) as u16, (i).try_into().unwrap()), Print("            ".to_string()));
+        }
+    }
+
+    pub fn draw_pointer(&self, choice: &u16) {
+        execute!(stdout(), MoveTo(self.start_position.x as u16 + 3, (self.start_position.y as u16 + 6) + (2 * choice)), Print('\u{25B6}'));
+    }
+}
+
+
 
 impl UiElement for DialogueBox {
     fn build(start_position: Position, end_position: Position) -> Self {

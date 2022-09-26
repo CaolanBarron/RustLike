@@ -1,4 +1,4 @@
-use std::array;
+use std::{array, vec};
 
 use fundamentals::{pos, position::Position};
 use rand::seq::SliceRandom;
@@ -44,6 +44,12 @@ impl Mapable for Enemy {
     fn name(&self) -> &String {
        &self.data.name 
     }
+
+    fn dialogue(&self) -> Vec<String> {
+        vec!["Talk".to_string(), "Fight".to_string(), "Leave".to_string()]
+
+    }
+
 }
 
 impl Character for Enemy {
@@ -68,9 +74,6 @@ impl Character for Enemy {
     }
 
 
-    fn look() -> Vec<Entity> {
-        todo!()
-    }
 
     fn walkable(ground: Option<&char>) -> bool {
         match ground {

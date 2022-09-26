@@ -1,14 +1,14 @@
 extern crate fundamentals;
-use fundamentals::{pos,position::Position};
-    
-    
-use crate::{entity::{Entity, Character, Mapable}, item::Item};
+use std::rc::Rc;
 
+use fundamentals::{pos,position::Position};    
+use crate::{entity::{Entity, Character, Mapable}, item::Item};
 
 pub struct Player {
     data: Entity,
 
     inventory: Vec<Box<dyn Item>>,
+    
 }
 
 impl Player {
@@ -22,8 +22,11 @@ impl Player {
                 avatar: '\u{263A}',
             },
             inventory: vec![],
+            
         }
     }
+
+    
     pub fn position(&self) -> Position {
        self.data.position.clone() 
     }
@@ -38,6 +41,28 @@ impl Player {
 
     pub fn drop(item: Box<dyn Item>) -> Box<dyn Item> {
         todo!()
+    }
+
+    pub fn look(&self ,entities: &Vec<Rc<dyn Mapable>>) -> Option<Vec<Rc<dyn Mapable>>> {
+
+        let mut player_prox: Vec<Position> = vec![];
+        for y in self.position().y -1 .. self.position().y + 2 {
+            for x in self.position().x -1 .. self.position().x + 2 {
+                player_prox.push(pos!(x,y));
+            }
+        }
+
+        let mut new_vec = vec![];
+        for e in entities {
+            if player_prox.contains(&e.position()) {
+                new_vec.push(e.clone())
+            }
+        }
+        if new_vec.is_empty(){
+            None
+        } else {
+            Some(new_vec)
+        }
     }
 
 }
@@ -57,6 +82,10 @@ impl Mapable for Player {
 
     fn name(&self) -> &String {
        &self.data.name 
+    }
+
+    fn dialogue(&self) -> Vec<String> {
+        todo!()
     }
 }
 
@@ -90,8 +119,5 @@ impl Character for Player {
             }
             None => false,
         }
-    }
-    fn look() -> Vec<Entity> {
-        todo!()
     }
 }

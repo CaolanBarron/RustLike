@@ -27,8 +27,8 @@ impl InventoryDisplay {
         let end_x = self.end_position.x as u16;
         
         for (i ,item) in items.iter().enumerate() {
-            execute!(stdout(), MoveTo(x + 3, y + (3*i) as u16), Print(item.name()));
-            execute!(stdout(), MoveTo(end_x - 3, y + (3*i) as u16), Print(item.avatar()));
+            execute!(stdout(), MoveTo(x + 3, y + (2*i) as u16), Print(item.name()));
+            execute!(stdout(), MoveTo(end_x - 3, y + (2*i) as u16), Print(item.avatar()));
         }
     }
 }

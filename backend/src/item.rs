@@ -27,6 +27,11 @@ impl Mapable for Weapon {
     fn name(&self) -> &String {
         &self.data.name
     }
+
+    fn dialogue(&self) -> Vec<String> {
+        todo!()
+    }
+
 }
 
 impl Item for Weapon {
@@ -68,6 +73,10 @@ impl Mapable for Armour {
     fn name(&self) -> &String {
         todo!()
     }
+
+    fn dialogue(&self) -> Vec<String> {
+        todo!()
+    }
 }
 
 impl Item for Armour {
@@ -107,6 +116,10 @@ impl Mapable for Potion {
     }
 
     fn name(&self) -> &String {
+        todo!()
+    }
+
+    fn dialogue(&self) -> Vec<String> {
         todo!()
     }
 }
