@@ -1,6 +1,8 @@
+use std::rc::Rc;
+
 use fundamentals::{position::Position, pos};
 
-use crate::{player::Player, enemy::Enemy};
+use crate::{player::Player, enemy::Enemy, item::{Item, Armour, Weapon, Potion}};
 
 /*
 Entity is a struct that contains base data 
@@ -88,9 +90,44 @@ impl EntityBuilder {
             }  
         }
     }
-    #[allow(dead_code)]
-    pub fn build_item() -> ! {
-        todo!()
+    
+    pub fn build_armour(self, pos:Position) -> Armour {
+        let n = Armour::random_armour_name();
+
+        Armour { 
+            data: Entity {
+                name:  n,
+                position: pos,
+                previous_position: pos,
+                avatar: '\u{25DB}',
+            } 
+        }
+    }
+
+    pub fn build_weapon(self, pos: Position) -> Weapon {
+        let n = Weapon::random_weapon_name();
+    
+        Weapon {
+            data: Entity {
+                name: n,
+                position: pos,
+                previous_position: pos,
+                avatar: '\u{2694}',
+            }
+        }
+    }
+
+    pub fn build_potion(self, pos: Position) -> Potion {
+        let n = Potion::random_potion_name();
+
+        Potion {
+            data: Entity {
+                name: n,
+                position: pos,
+                previous_position: pos,
+                avatar: '\u{2615}',
+            }
+        }
     }
 }
 

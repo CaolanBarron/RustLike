@@ -1,3 +1,7 @@
+use std::thread;
+
+use rand::seq::SliceRandom;
+
 use crate::entity::{Entity, Mapable};
 
 pub trait Item {
@@ -29,7 +33,11 @@ impl Mapable for Weapon {
     }
 
     fn dialogue(&self) -> Vec<String> {
-        todo!()
+        vec![
+            "Pick Up".to_string(),
+            "Inspect".to_string(),
+            "Drop".to_string(),
+        ]
     }
 
 }
@@ -51,7 +59,20 @@ impl Item for Weapon {
         &self.data.avatar
     }
 }
+impl Weapon {
+    pub(crate) fn random_weapon_name() -> String {
+        let n = [
+            "Broadsword",
+            "Shortsword",
+            "Axe",
+            "Boomerang",
+            "Dagger",
+            "Mace",
+        ];
 
+        n.choose(&mut rand::thread_rng()).unwrap().to_string()
+    }
+}
 
 pub struct Armour {
     pub data: Entity,
@@ -59,23 +80,27 @@ pub struct Armour {
 
 impl Mapable for Armour {
     fn avatar(&self) -> char {
-        todo!()
+        self.data.avatar
     }
 
     fn position(&self) -> fundamentals::position::Position {
-        todo!()
+        self.data.position
     }
 
     fn previous_position(&self) -> fundamentals::position::Position {
-        todo!()
+        self.data.previous_position
     }
 
     fn name(&self) -> &String {
-        todo!()
+        &self.data.name
     }
 
     fn dialogue(&self) -> Vec<String> {
-        todo!()
+        vec![
+            "Pick Up".to_string(),
+            "Inspect".to_string(),
+            "Leave".to_string(),
+        ]
     }
 }
 
@@ -97,6 +122,19 @@ impl Item for Armour {
     }
 }
 
+impl Armour {
+    pub(crate) fn random_armour_name() -> String {
+        let name = [
+            "Chainmail",
+            "Leather",
+            "Plate",
+            "Wooden"
+        ];
+
+        name.choose(&mut rand::thread_rng()).unwrap().to_string()
+    }
+}
+
 
 pub struct Potion {
     pub data: Entity,
@@ -104,19 +142,19 @@ pub struct Potion {
 
 impl Mapable for Potion {
     fn avatar(&self) -> char {
-        todo!()
+        self.data.avatar
     }
 
     fn position(&self) -> fundamentals::position::Position {
-        todo!()
+        self.data.position
     }
 
     fn previous_position(&self) -> fundamentals::position::Position {
-        todo!()
+        self.data.previous_position
     }
 
     fn name(&self) -> &String {
-        todo!()
+        &self.data.name
     }
 
     fn dialogue(&self) -> Vec<String> {
@@ -141,3 +179,16 @@ impl Item for Potion {
         &self.data.avatar
     }
 }
+impl Potion {
+    pub(crate) fn random_potion_name() -> String {
+        [
+            "Health",
+            "Attack",
+            "Stamina",
+            "Charisma",
+        ].choose(&mut rand::thread_rng())
+            .unwrap()
+            .to_string()
+    }
+}
+

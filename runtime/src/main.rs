@@ -17,8 +17,8 @@ fn main() {
     let mut ui = UI::build((0, 0), 0);
     rd.generate_level(ui.map(), ui.map().start_position, ui.map().end_position);
 
-    for _ in 0..6 {
-        rd.add_enemy();
+    for _ in 0..4 {
+        rd.add_entity();
     }
     gameplay_loop(ui, rd);
 }
@@ -136,6 +136,13 @@ fn get_input(rd: &mut RuntimeData) {
 
             KeyCode::Char('c') => {
                 rd.choice = (rd.choice + 1) % 3;
+            }
+
+            KeyCode::Enter => {
+                match rd.player.look(&rd.entities) {
+                    Some(input) => panic!("Interaction not made"),
+                    None => todo!(),
+                }
             }
 
             _ => (),

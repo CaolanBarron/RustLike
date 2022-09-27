@@ -26,7 +26,7 @@ impl RuntimeData {
         }
     }
 
-    pub fn add_enemy(&mut self) {
+    pub fn add_entity(&mut self) {
         loop{
             let pos = self.level.keys().choose(&mut rand::thread_rng());
             if {
@@ -44,7 +44,17 @@ impl RuntimeData {
                 }
             } {
                 let eb = EntityBuilder::new();
-                self.entities.push(Rc::new(eb.build_enemy(*pos.unwrap())));
+                let r = rand::thread_rng().gen_range(0..4);
+
+                let ent: Rc<dyn Mapable> = match r {
+                    0 => Rc::new(eb.build_enemy(*pos.unwrap())),
+                    1 => Rc::new(eb.build_armour(*pos.unwrap())),
+                    2 => Rc::new(eb.build_weapon(*pos.unwrap())),
+                    _ => Rc::new(eb.build_potion(*pos.unwrap())),
+                };
+
+
+                self.entities.push(ent);
                 break;
             }
         }
@@ -110,7 +120,7 @@ mod runtime_data_tests {
 
         rd.generate_level(ui.map(), pos!(50,4), pos!(100,50));
 
-        rd.add_enemy();
+        rd.add_entity();
 
         print!("FOund");
         print!("{:?}", rd.entities.index(0).name());

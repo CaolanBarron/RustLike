@@ -21,7 +21,7 @@ impl CharacterPortrait {
             'D' => self.draw_d().expect("Failed while drawing D"),
             'W' => self.draw_w().expect("Failed while drawing W"),
             'S' => self.draw_s().expect("Failed while drawing S"),
-            _ => self.clear_portrait().expect("Failed while clearing portrait"),
+            _ => self.clear_portrait(),
         }
     }
     fn draw_w(&self) -> Result<()>{
@@ -225,15 +225,15 @@ impl CharacterPortrait {
 
     fn draw_o(&self) -> Result<()> {
         execute!(stdout(), MoveTo((self.start_position.x + 1) as u16, (self.start_position.y + 3) as u16),
-            Print("        OO        "))?;
+            Print("      OOOOOO      "))?;
         execute!(stdout(), MoveTo((self.start_position.x + 1) as u16, (self.start_position.y + 4) as u16),
-            Print("      OO  OO      "))?;
+            Print("     O      O     "))?;
         execute!(stdout(), MoveTo((self.start_position.x + 1) as u16, (self.start_position.y + 5) as u16),
-            Print("     OO    OO     "))?;
+            Print("    O        O    "))?;
         execute!(stdout(), MoveTo((self.start_position.x + 1) as u16, (self.start_position.y + 6) as u16),
-            Print("   OO        OO   "))?;
+            Print("   O          O   "))?;
         execute!(stdout(), MoveTo((self.start_position.x + 1) as u16, (self.start_position.y + 7) as u16),
-            Print(" OO            OO "))?;
+            Print("  O            O  "))?;
         execute!(stdout(), MoveTo((self.start_position.x + 1) as u16, (self.start_position.y + 8) as u16),
             Print(" O              O "))?;
         execute!(stdout(), MoveTo((self.start_position.x + 1) as u16, (self.start_position.y + 9) as u16),
@@ -243,24 +243,24 @@ impl CharacterPortrait {
         execute!(stdout(), MoveTo((self.start_position.x + 1) as u16, (self.start_position.y + 11) as u16),
             Print(" O              O "))?;
         execute!(stdout(), MoveTo((self.start_position.x + 1) as u16, (self.start_position.y + 12) as u16),
-            Print(" OO            OO "))?;
+            Print("  O            O  "))?;
         execute!(stdout(), MoveTo((self.start_position.x + 1) as u16, (self.start_position.y + 13) as u16),
-            Print("   OO        OO   "))?;
+            Print("   O          O   "))?;
         execute!(stdout(), MoveTo((self.start_position.x + 1) as u16, (self.start_position.y + 14) as u16),
-            Print("     OO    OO     "))?;
+            Print("    O        O    "))?;
         execute!(stdout(), MoveTo((self.start_position.x + 1) as u16, (self.start_position.y + 15) as u16),
-            Print("      OO  OO      "))?;
+            Print("     O      O     "))?;
         execute!(stdout(), MoveTo((self.start_position.x + 1) as u16, (self.start_position.y + 16) as u16),
-            Print("        OO        "))?;
+            Print("      OOOOOO      "))?;
 
         Ok(())
     }
     
-    pub fn clear_portrait(&self) -> Result<()>{
+    pub fn clear_portrait(&self) {
         for i in self.start_position.y+1..self.end_position.y-1 {
-            execute!(stdout(), MoveTo((self.start_position.x + 1) as u16, (i).try_into().unwrap()), Print("                  ".to_string()))?;
+            execute!(stdout(), MoveTo((self.start_position.x + 1) as u16, (i).try_into().unwrap()), 
+                Print("                  ".to_string())).expect("Failed while clearing portrait");
         }
-        Ok(())
     }
 }
 
