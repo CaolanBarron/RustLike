@@ -1,10 +1,13 @@
-use std::{collections::HashMap, ops::Index, rc::Rc};
+use std::rc::Rc;
 
-use backend::{entity::{Entity, Mapable, EntityBuilder, Character}, player::Player, enemy::Enemy};
+use backend::{
+    entity::{EntityBuilder, Mapable},
+    player::Player,
+};
 use frontend::map::Map;
-use fundamentals::{position::Position, pos};
+use fundamentals::{pos, position::Position};
 use indexmap::IndexMap;
-use rand::{Rng, seq::IteratorRandom};
+use rand::{seq::IteratorRandom, Rng};
 
 //  Data concerning what entities are active in the game
 pub(crate) struct RuntimeData {
@@ -27,19 +30,17 @@ impl RuntimeData {
     }
 
     pub fn add_entity(&mut self) {
-        loop{
+        loop {
             let pos = self.level.keys().choose(&mut rand::thread_rng());
             if {
                 let _ground = self.level.get(pos.unwrap());
                 match _ground {
-                    Some(ground) =>{ 
-                        match ground {
-                            '\u{2591}' => true,
-                            '\u{2592}' => true,
-                            '\u{2593}' => true,
-                            _ => false,
-                        }
-                    }
+                    Some(ground) => match ground {
+                        '\u{2591}' => true,
+                        '\u{2592}' => true,
+                        '\u{2593}' => true,
+                        _ => false,
+                    },
                     None => false,
                 }
             } {
@@ -53,7 +54,6 @@ impl RuntimeData {
                     _ => Rc::new(eb.build_potion(*pos.unwrap())),
                 };
 
-
                 self.entities.push(ent);
                 break;
             }
@@ -61,9 +61,8 @@ impl RuntimeData {
     }
 
     pub(crate) fn generate_level(&mut self, map: &Map, start: Position, end: Position) {
-
-        let start = pos!(52,5);
-        let end = pos!(80,15);
+        let start = pos!(52, 5);
+        let end = pos!(80, 15);
         let mut insert = |character: &str, x: isize, y: isize| {
             self.level.insert(
                 Position::new(x, y),
@@ -105,24 +104,25 @@ impl RuntimeData {
     }
 }
 
-
 #[cfg(test)]
 mod runtime_data_tests {
+    use std::ops::Index;
+
     use frontend::UI;
 
     use super::*;
 
     #[test]
     fn add_enemy_test() {
-        let mut rd = RuntimeData::new( Player::new("namJose".to_string(), 55, 5) );
+        let mut rd = RuntimeData::new(Player::new("namJose".to_string(), 55, 5));
 
-        let ui = UI::build((2,2), 2);
+        let ui = UI::build((2, 2), 2);
 
-        rd.generate_level(ui.map(), pos!(50,4), pos!(100,50));
+        rd.generate_level(ui.map(), pos!(50, 4), pos!(100, 50));
 
         rd.add_entity();
 
         print!("FOund");
         print!("{:?}", rd.entities.index(0).name());
-    } 
+    }
 }

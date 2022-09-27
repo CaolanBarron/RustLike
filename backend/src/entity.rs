@@ -1,11 +1,15 @@
 use std::rc::Rc;
 
-use fundamentals::{position::Position, pos};
+use fundamentals::{pos, position::Position};
 
-use crate::{player::Player, enemy::Enemy, item::{Item, Armour, Weapon, Potion}};
+use crate::{
+    enemy::Enemy,
+    item::{Armour, Item, Potion, Weapon},
+    player::Player,
+};
 
 /*
-Entity is a struct that contains base data 
+Entity is a struct that contains base data
 for all dynamic features of the game
 */
 #[derive(Debug)]
@@ -14,7 +18,7 @@ pub struct Entity {
     pub position: Position,
     pub previous_position: Position,
     pub avatar: char,
-} 
+}
 
 impl Entity {
     pub fn name(self) -> String {
@@ -33,7 +37,7 @@ impl Entity {
         self.previous_position = self.position;
     }
 
-    pub fn move_position(&mut self, add_pos:Position) {
+    pub fn move_position(&mut self, add_pos: Position) {
         self.position = self.position + add_pos
     }
 }
@@ -52,26 +56,24 @@ pub trait Character {
     fn move_left(&mut self);
     fn move_right(&mut self);
 
-    fn walkable( ground: Option<&char>) -> bool {
+    fn walkable(ground: Option<&char>) -> bool {
         match ground {
-            Some(ground) =>{ 
-                match ground {
-                    '\u{2591}' => true,
-                    '\u{2592}' => true,
-                    '\u{2593}' => true,
-                    _ => false,
-                }
-            }
+            Some(ground) => match ground {
+                '\u{2591}' => true,
+                '\u{2592}' => true,
+                '\u{2593}' => true,
+                _ => false,
+            },
             None => false,
         }
     }
 }
 
 #[derive(Default)]
-pub struct EntityBuilder; 
+pub struct EntityBuilder;
 
 impl EntityBuilder {
-    pub fn new() -> EntityBuilder{
+    pub fn new() -> EntityBuilder {
         Default::default()
     }
     #[allow(dead_code)]
@@ -81,39 +83,39 @@ impl EntityBuilder {
     #[allow(dead_code)]
     pub fn build_enemy(self, pos: Position) -> Enemy {
         let n = Enemy::random_enemy_name();
-        Enemy{ 
-            data: Entity { 
-                name: n.0, 
-                position: pos, 
-                previous_position: pos, 
-                avatar:n.1,  
-            }  
+        Enemy {
+            data: Entity {
+                name: n.0,
+                position: pos,
+                previous_position: pos,
+                avatar: n.1,
+            },
         }
     }
-    
-    pub fn build_armour(self, pos:Position) -> Armour {
+
+    pub fn build_armour(self, pos: Position) -> Armour {
         let n = Armour::random_armour_name();
 
-        Armour { 
+        Armour {
             data: Entity {
-                name:  n,
+                name: n,
                 position: pos,
                 previous_position: pos,
                 avatar: '\u{25DB}',
-            } 
+            },
         }
     }
 
     pub fn build_weapon(self, pos: Position) -> Weapon {
         let n = Weapon::random_weapon_name();
-    
+
         Weapon {
             data: Entity {
                 name: n,
                 position: pos,
                 previous_position: pos,
                 avatar: '\u{2694}',
-            }
+            },
         }
     }
 
@@ -125,8 +127,8 @@ impl EntityBuilder {
                 name: n,
                 position: pos,
                 previous_position: pos,
-                avatar: '\u{2615}',
-            }
+                avatar: '\u{10C4}',
+            },
         }
     }
 }
@@ -139,7 +141,7 @@ mod entity_tests {
     fn build_enemy_test() {
         let eb = EntityBuilder::new();
 
-        let e1 = eb.build_enemy(pos!(2,2));
+        let e1 = eb.build_enemy(pos!(2, 2));
 
         print!("{:?}", e1)
     }

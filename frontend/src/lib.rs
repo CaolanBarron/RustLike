@@ -1,17 +1,23 @@
-use std::io::{Stdout, stdout};
+use std::io::{stdout, Stdout};
 
 use character_portrait::CharacterPortrait;
-use crossterm::{execute, cursor::{MoveTo, Hide}, style::Print, Result, terminal::{Clear, ClearType, enable_raw_mode, EnterAlternateScreen}};
+use crossterm::{
+    cursor::{Hide, MoveTo},
+    execute,
+    style::Print,
+    terminal::{enable_raw_mode, Clear, ClearType, EnterAlternateScreen},
+    Result,
+};
 use dialogue_box::DialogueBox;
-use fundamentals::{position::Position, pos};
+use fundamentals::{pos, position::Position};
 use inventory_display::InventoryDisplay;
-use options_display::OptionsDisplay;
 use map::Map;
-pub mod map;
-pub mod dialogue_box;
+use options_display::OptionsDisplay;
 pub mod character_portrait;
-pub mod options_display;
+pub mod dialogue_box;
 pub mod inventory_display;
+pub mod map;
+pub mod options_display;
 
 pub struct UI {
     output: Stdout,
@@ -23,8 +29,6 @@ pub struct UI {
 }
 
 impl UI {
-
-
     pub fn inventory_display(&self) -> &InventoryDisplay {
         &self.inventory_display
     }
@@ -42,40 +46,32 @@ impl UI {
     }
 
     pub fn build(size: (isize, isize), ratios: isize) -> Self {
-/*         let id = 
-            InventoryDisplay::build(pos!(0 ,0), pos!(size.0/ratios, size.1 - size.1/ratios));
+        /*         let id =
+                    InventoryDisplay::build(pos!(0 ,0), pos!(size.0/ratios, size.1 - size.1/ratios));
 
-        let m = 
-            Map::build(pos!(size.0/ratios,0), pos!(size.0, size.1 - size.1/ratios));
+                let m =
+                    Map::build(pos!(size.0/ratios,0), pos!(size.0, size.1 - size.1/ratios));
 
-        let db = 
-            DialogueBox::build(pos!(0, size.1 - size.1/ratios), pos!(size.0 - size.0/ratios, size.1));
-        
-        let cp = 
-            CharacterPortrait::build(
-                pos!(size.0 - size.0 - ratios, size.1 - size.1 - ratios), 
-                pos!( size.0, size.1));
+                let db =
+                    DialogueBox::build(pos!(0, size.1 - size.1/ratios), pos!(size.0 - size.0/ratios, size.1));
 
-        let od = 
-            OptionsDisplay::build(pos!(0, size.1 + 1), pos!(size.0, size.1 + 2));
-*/
-        let id = 
-            InventoryDisplay::build(pos!(30 ,0), pos!(50, 40));
+                let cp =
+                    CharacterPortrait::build(
+                        pos!(size.0 - size.0 - ratios, size.1 - size.1 - ratios),
+                        pos!( size.0, size.1));
 
-        let m = 
-            Map::build(pos!(50,0), pos!(100,40));
+                let od =
+                    OptionsDisplay::build(pos!(0, size.1 + 1), pos!(size.0, size.1 + 2));
+        */
+        let id = InventoryDisplay::build(pos!(30, 0), pos!(50, 40));
 
-        let db = 
-            DialogueBox::build(pos!(30, 40), pos!(80, 60));
-        
-        let cp = 
-            CharacterPortrait::build(
-                pos!(80, 40), 
-                pos!( 100, 60));
+        let m = Map::build(pos!(50, 0), pos!(100, 40));
 
-        let od = 
-            OptionsDisplay::build(pos!(30, 60), pos!(100, 64));
+        let db = DialogueBox::build(pos!(30, 40), pos!(80, 60));
 
+        let cp = CharacterPortrait::build(pos!(80, 40), pos!(100, 60));
+
+        let od = OptionsDisplay::build(pos!(30, 60), pos!(100, 64));
 
         UI {
             output: stdout(),
@@ -88,16 +84,33 @@ impl UI {
     }
 
     pub fn init_term(&mut self) {
-        execute!(self.output, Clear(ClearType::All), Hide, EnterAlternateScreen);
+        execute!(
+            self.output,
+            Clear(ClearType::All),
+            Hide,
+            EnterAlternateScreen
+        );
         enable_raw_mode();
 
-        self.inventory_display.draw_frame(self.inventory_display.start_position(), self.inventory_display.end_position());
-        self.map.draw_frame(self.map.start_position(), self.map.end_position());
-        self.dialogue_box.draw_frame(self.dialogue_box.start_position(), self.dialogue_box.end_position());
-        self.character_portrait.draw_frame(self.character_portrait.start_position(), self.character_portrait.end_position());
-        self.options_display.draw_frame(self.options_display.start_position(), self.options_display.end_position());
+        self.inventory_display.draw_frame(
+            self.inventory_display.start_position(),
+            self.inventory_display.end_position(),
+        );
+        self.map
+            .draw_frame(self.map.start_position(), self.map.end_position());
+        self.dialogue_box.draw_frame(
+            self.dialogue_box.start_position(),
+            self.dialogue_box.end_position(),
+        );
+        self.character_portrait.draw_frame(
+            self.character_portrait.start_position(),
+            self.character_portrait.end_position(),
+        );
+        self.options_display.draw_frame(
+            self.options_display.start_position(),
+            self.options_display.end_position(),
+        );
     }
-
 }
 
 trait UiElement {
@@ -106,36 +119,64 @@ trait UiElement {
     fn start_position(&self) -> Position;
     fn end_position(&self) -> Position;
     fn draw_frame(&self, start: Position, end: Position) {
-        for y in start.y .. end.y {
-            for x in start.x .. end.x {
-
+        for y in start.y..end.y {
+            for x in start.x..end.x {
                 // If X and Y is 0: print top left
                 if x == start.x && y == start.y {
-                    self.edit_ui(x.try_into().unwrap(), y.try_into().unwrap(), '\u{250F}', &mut stdout());
+                    self.edit_ui(
+                        x.try_into().unwrap(),
+                        y.try_into().unwrap(),
+                        '\u{250F}',
+                        &mut stdout(),
+                    );
                 }
                 // If X is max and Y is 0: print top right
                 else if x == end.x - 1 && y == start.y {
-                    self.edit_ui(x.try_into().unwrap(), y.try_into().unwrap(), '\u{2513}', &mut stdout());
+                    self.edit_ui(
+                        x.try_into().unwrap(),
+                        y.try_into().unwrap(),
+                        '\u{2513}',
+                        &mut stdout(),
+                    );
                 }
                 // If X is 0 and Y is max: print bottom left
                 else if x == start.x && y == end.y - 1 {
-                    self.edit_ui(x.try_into().unwrap(), y.try_into().unwrap(), '\u{2517}', &mut stdout());
+                    self.edit_ui(
+                        x.try_into().unwrap(),
+                        y.try_into().unwrap(),
+                        '\u{2517}',
+                        &mut stdout(),
+                    );
                 }
                 // If X and Y is max: print bottom Right
                 else if x == end.x - 1 && y == end.y - 1 {
-                    self.edit_ui(x.try_into().unwrap(), y.try_into().unwrap(), '\u{251B}', &mut stdout());
+                    self.edit_ui(
+                        x.try_into().unwrap(),
+                        y.try_into().unwrap(),
+                        '\u{251B}',
+                        &mut stdout(),
+                    );
                 }
                 // If X is not 0 and max and y is 0 or max: print Horizontal wall
                 else if (x != start.x && x != end.x - 1) && (y == start.y || y == end.y - 1) {
-                    self.edit_ui(x.try_into().unwrap(), y.try_into().unwrap(), '\u{2501}', &mut stdout());
+                    self.edit_ui(
+                        x.try_into().unwrap(),
+                        y.try_into().unwrap(),
+                        '\u{2501}',
+                        &mut stdout(),
+                    );
                 }
                 // If X is 0 or max and y is not 0 and max: print Vertical wall
                 else if (x == start.x || x == end.x - 1) && (y != start.y && y != end.y) {
-                    self.edit_ui(x.try_into().unwrap(), y.try_into().unwrap(), '\u{2503}', &mut stdout());
+                    self.edit_ui(
+                        x.try_into().unwrap(),
+                        y.try_into().unwrap(),
+                        '\u{2503}',
+                        &mut stdout(),
+                    );
                 }
             }
         }
- 
     }
 
     fn edit_ui(&self, x: u16, y: u16, input: char, writer: &mut Stdout) -> Result<()> {
@@ -146,21 +187,25 @@ trait UiElement {
 
 #[cfg(test)]
 mod ui_tests {
-    use crossterm::{event::{read, Event, KeyEvent, KeyCode}, terminal::disable_raw_mode};
     use super::*;
+    use crossterm::{
+        event::{read, Event, KeyCode, KeyEvent},
+        terminal::disable_raw_mode,
+    };
 
     fn test_input() {
         let event = read().unwrap();
 
         if let Event::Key(KeyEvent {
-            code, 
-            modifiers: _, 
-            kind: _, 
-            state: _ 
-        }) = event {
+            code,
+            modifiers: _,
+            kind: _,
+            state: _,
+        }) = event
+        {
             match code {
                 KeyCode::Esc => disable_raw_mode().expect("msg"),
-                _=> (),
+                _ => (),
             }
         }
     }
@@ -169,7 +214,7 @@ mod ui_tests {
     fn display_ui_frame() {
         let mut ui = UI::build((150, 100), 4);
         ui.init_term();
-        loop{
+        loop {
             test_input();
         }
     }

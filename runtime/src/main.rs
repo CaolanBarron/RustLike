@@ -45,12 +45,9 @@ fn gameplay_loop(mut ui: UI, mut rd: RuntimeData) {
 fn check_player_surroundings(rd: &mut RuntimeData, ui: &UI) {
     match rd.player.look(&rd.entities) {
         Some(input) => {
-            ui.character_portrait()
-                .clear_portrait();
-            ui.dialogue_box()
-            .clear_box();
-            ui.dialogue_box()
-                .draw_title(&input[rd.targeted].name());
+            ui.character_portrait().clear_portrait();
+            ui.dialogue_box().clear_box();
+            ui.dialogue_box().draw_title(&input[rd.targeted].name());
             ui.dialogue_box()
                 .draw_options(&input[rd.targeted].dialogue(), &rd.choice);
             ui.character_portrait()
@@ -130,20 +127,24 @@ fn get_input(rd: &mut RuntimeData) {
                     Some(input) => range = input.len(),
                     None => return (),
                 }
-            
+
                 rd.targeted = (rd.targeted + 1) % range;
             }
 
-            KeyCode::Char('c') => {
-                rd.choice = (rd.choice + 1) % 3;
+            KeyCode::Char('i') => {
+                rd.player.inventory_choice = (rd.choice + 1) % 3;
             }
 
-            KeyCode::Enter => {
-                match rd.player.look(&rd.entities) {
-                    Some(input) => panic!("Interaction not made"),
-                    None => todo!(),
-                }
-            }
+            KeyCode::Char('1') => panic!("One"),
+            KeyCode::Char('2') => panic!("Two"),
+            KeyCode::Char('3') => panic!("Three"),
+            KeyCode::Char('4') => panic!("Four"),
+            KeyCode::Char('5') => panic!("Five"),
+
+            KeyCode::Enter => match rd.player.look(&rd.entities) {
+                Some(input) => panic!("Interaction not made"),
+                None => todo!(),
+            },
 
             _ => (),
         }
